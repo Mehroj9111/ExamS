@@ -2,29 +2,33 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Context;
 
-
-
-public class DataContext:DbContext
+public class DataContext : DbContext
 {
-    public DataContext(DbContextOptions<DataContext> options):base(options)
-    {
-
+    public DataContext(DbContextOptions<DataContext> options) : base(options) 
+    { 
+        
     }
-protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-       modelBuilder.Entity<Participant>()
-            .HasOne<Location>(s => s.Locations)
-            .WithMany(g => g.Participants)
-            .HasForeignKey(s => s.Id);
-
-       modelBuilder.Entity<Participant>()
-            .HasOne<Group>(s => s.Groups)
-            .WithMany(g => g.Participants)
-            .HasForeignKey(s => s.Id);
-             
+//---------------------------------------------------------------------------------------
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    { 
+        modelBuilder.Entity<Instalment>()
+        .HasOne<Customer>(s => s.Customers)
+        .WithMany(g => g.Instalments)
+        .HasForeignKey(s => s.CustomerId);
+//------------------------------------------------
+        modelBuilder.Entity<Customer>()
+        .HasOne<Product>(s => s.Products)
+        .WithMany(g => g.Customers)
+        .HasForeignKey(s => s.ProductId);
+//------------------------------------------------
+        modelBuilder.Entity<Instalment>()
+        .HasOne<Product>(s => s.Products)
+        .WithMany(g => g.Instalments)
+        .HasForeignKey(s => s.ProductId);
     }
-    public DbSet<Challenge> Challenges { get; set; }
-    public DbSet<Group> Groups { get; set; }
-    public DbSet<Location> Locations { get; set; }
-    public DbSet<Participant> Participants  { get; set; }
+//--------------------------------------------------
+    public DbSet<Instalment> Instalments { get; set; }
+    public DbSet<Customer> Customers { get; set; }
+    public DbSet<Product> Products {get; set;}
+
 }
